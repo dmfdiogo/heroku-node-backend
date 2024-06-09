@@ -7,11 +7,16 @@ import exportSwaggerEndpoints from './endpoints.js'
 
 // const fas = require('./models/Category.js');
 
-const PORT = process.env.PORT || 8000
+const PORT = process.env.PORT || 3000
+
+const BAM = process.env.PASSWORD
+
+console.log('123456')
+console.log(BAM)
 
 export const server = () => {
     app.listen(PORT, () => {
-        console.log('API documentation: http://localhost:8000/docs')
+        console.log(`API documentation: http://localhost:${PORT}/docs`)
         console.log(`Server is running on port ${PORT}`)
     })
 
@@ -19,6 +24,6 @@ export const server = () => {
     exportSwaggerEndpoints(app)
 }
 
-// server()
+server()
 
 // export default server

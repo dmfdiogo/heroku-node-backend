@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import swaggerUi from 'swagger-ui-express'
-import swaggerFile from './swagger-output.json' with { type: 'json' }
+import swaggerFile from './swagger-output.json' assert { type: 'json' }
 import connectDB from './config/database.js'
 
 import {
