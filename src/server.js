@@ -9,13 +9,9 @@ import exportSwaggerEndpoints from './endpoints.js'
 
 const PORT = process.env.PORT || 3000
 
-const BAM = process.env.PASSWORD
-
-console.log('123456')
-console.log(BAM)
-
 export const server = () => {
     app.listen(PORT, () => {
+        console.log('-----------------')
         console.log(`API documentation: http://localhost:${PORT}/docs`)
         console.log(`Server is running on port ${PORT}`)
     })

@@ -9,6 +9,9 @@
         "dev": "node --watch src/server.js",
         "swagger": "node --watch src/swagger.js"
     },
+    "engines": {
+        "node": "20.9.0"
+    },
     "type": "module",
     "keywords": [],
     "author": "",
