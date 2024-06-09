@@ -4,6 +4,7 @@
     "description": "",
     "main": "server.js",
     "scripts": {
+        "start": "node src/server.ts",
         "test": "mocha --timeout 10000",
         "dev": "node --watch src/server.ts",
         "swagger": "node --watch src/swagger.js"
