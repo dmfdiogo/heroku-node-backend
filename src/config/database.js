@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
 
-const connectDB = async () => {
+const connectDB = async (URI) => {
     try {
-        await mongoose.connect('mongodb://localhost:27017/my-database')
+        await mongoose.connect(URI)
         console.log('MongoDB - connected')
         return
     } catch (error) {

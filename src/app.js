@@ -29,7 +29,8 @@ console.log(path.resolve(__dirname, './config/.env'))
 const app = express()
 
 // connect database
-connectDB()
+const URI = process.env.MONGO_URI || 'mongodb://localhost:27017/my-database'
+connectDB(URI)
 
 // use libraries
 app.use(express.urlencoded({ extended: false }))
