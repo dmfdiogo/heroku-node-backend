@@ -1,18 +1,17 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
 const reviewSchema = new mongoose.Schema({
-    
     review: {
         type: String,
     },
     stars: {
         type: Number,
     },
-    user:{
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
-    product:{
+    product: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product',
     },
@@ -23,8 +22,8 @@ const reviewSchema = new mongoose.Schema({
     updatedAt: {
         type: Date,
         default: Date.now,
-    }
+    },
 })
 
-const Review =  mongoose.model('Review', reviewSchema);
+const Review = mongoose.model('Review', reviewSchema)
 export default Review

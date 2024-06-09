@@ -1,21 +1,20 @@
-import nodemailer from 'nodemailer';
+import nodemailer from 'nodemailer'
 
 export const sendEmail = async (options) => {
-
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
             user: 'dmf.diogo@gmail.com',
-            pass: process.env.PASSWORD
-        }
-    });
+            pass: process.env.PASSWORD,
+        },
+    })
 
     var mailOptions = {
         from: `dmf.diogo@gmail.com`,
         to: `${options.email}`,
-        subject: "Password Reset Request",
-        text: options.message   
+        subject: 'Password Reset Request',
+        text: options.message,
     }
 
-    await transporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions)
 }

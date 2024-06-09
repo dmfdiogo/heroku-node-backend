@@ -1,10 +1,10 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
 const productSchema = new mongoose.Schema({
     name: {
         type: String,
     },
-    slug:{
+    slug: {
         type: String,
     },
     price: {
@@ -14,10 +14,12 @@ const productSchema = new mongoose.Schema({
         public_id: String,
         url: String,
     },
-    images: [{
-        public_id: String,
-        url: String,
-    }],
+    images: [
+        {
+            public_id: String,
+            url: String,
+        },
+    ],
     description: {
         type: String,
     },
@@ -25,25 +27,27 @@ const productSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
     },
-    colors:{
+    colors: {
         type: Array,
     },
-    inStock:{
+    inStock: {
         type: Boolean,
         default: true,
     },
-    availableQuantity:{
+    availableQuantity: {
         type: Number,
     },
-    reviews: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Review',
-    }],
-    averageRating:{
+    reviews: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Review',
+        },
+    ],
+    averageRating: {
         type: Number,
         default: 0,
     },
-    totalRating:{
+    totalRating: {
         type: Number,
         default: 0,
     },
@@ -56,15 +60,15 @@ const productSchema = new mongoose.Schema({
     },
 })
 
-productSchema.pre("save", async function(next){
-    if(this.isModified("name")){
-        console.log(this.name);
-        this.slug = this.name.split(" ").join("-").toLowerCase();
-        console.log(this.slug);
+productSchema.pre('save', async function (next) {
+    if (this.isModified('name')) {
+        console.log(this.name)
+        this.slug = this.name.split(' ').join('-').toLowerCase()
+        console.log(this.slug)
     }
-    next();
+    next()
 })
 
-const Product =  mongoose.model('Product', productSchema);
+const Product = mongoose.model('Product', productSchema)
 
 export default Product

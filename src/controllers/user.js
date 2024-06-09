@@ -1,122 +1,122 @@
-import crypto from 'crypto';
-import User from '../models/User.js';
-import Otp from '../models/OTP.js';
-import { sendEmail } from '../middleware/sendEmail.js';
-
+import crypto from 'crypto'
+import User from '../models/User.js'
+import Otp from '../models/OTP.js'
+import { sendEmail } from '../middleware/sendEmail.js'
 
 // const otpGenrator = require('otp-generator');
 // const unirest = require("unirest");
 
-export const register = async(req, res) => {
+export const register = async (req, res) => {
     try {
         console.log('@@ req', req.body)
-        if(!req.body.name || !req.body.email || !req.body.password){
+        if (!req.body.name || !req.body.email || !req.body.password) {
             return res.status(400).json({
                 error: 'Please fill all the fields',
-                success: false
+                success: false,
             })
         }
 
         const userData = {
-            name:req.body.name,
-            email:req.body.email,
-            password:req.body.password
-        };
+            name: req.body.name,
+            email: req.body.email,
+            password: req.body.password,
+        }
 
-        const checkUserEmail = await User.findOne({email:req.body.email});
+        const checkUserEmail = await User.findOne({ email: req.body.email })
 
-        if(checkUserEmail){
+        if (checkUserEmail) {
             return res.status(400).json({
                 error: 'User with this email already exists',
-                success: false
+                success: false,
             })
         }
 
-        const user = await User.create(userData);
+        const user = await User.create(userData)
 
-        const token = user.generateAuthToken();
+        const token = user.generateAuthToken()
 
-        res.cookie('token', token, {httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7})
-        .status(201).json({
-            message: 'User created successfully',
-            user: user,
-            success: true
+        res.cookie('token', token, {
+            httpOnly: true,
+            maxAge: 1000 * 60 * 60 * 24 * 7,
         })
-
+            .status(201)
+            .json({
+                message: 'User created successfully',
+                user: user,
+                success: true,
+            })
     } catch (error) {
         res.status(500).json({
             message: error.message,
             other: 'no',
-            success: false
+            success: false,
         })
     }
 }
 
-export const login = async(req, res) => {
+export const login = async (req, res) => {
     try {
-
-        if(!req.body.email || !req.body.password){
+        if (!req.body.email || !req.body.password) {
             return res.status(400).json({
                 message: 'Please fill all the fields',
-                success: false
+                success: false,
             })
         }
 
-        const {email, password} = req.body;
-        const user = await User.findOne({email}).select('+password');
-        if(!user){
+        const { email, password } = req.body
+        const user = await User.findOne({ email }).select('+password')
+        if (!user) {
             return res.status(400).json({
                 error: 'User with this email does not exist',
-                success: false
+                success: false,
             })
         }
 
-        const isMatch = await user.comparePassword(password);
-        if(!isMatch){
+        const isMatch = await user.comparePassword(password)
+        if (!isMatch) {
             return res.status(400).json({
                 error: 'Invalid password',
-                success: false
+                success: false,
             })
         }
 
-        const token = user.generateAuthToken();
+        const token = user.generateAuthToken()
 
-        res.cookie('token', token, {httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7})
-        .status(201).json({
-            message: 'User loggedIn successfully',
-            user: user,
-            success: true
+        res.cookie('token', token, {
+            httpOnly: true,
+            maxAge: 1000 * 60 * 60 * 24 * 7,
         })
-
-
-    }
-    catch (error) {
+            .status(201)
+            .json({
+                message: 'User loggedIn successfully',
+                user: user,
+                success: true,
+            })
+    } catch (error) {
         res.status(500).json({
             error: error.message,
-            success: false
+            success: false,
         })
     }
 }
 
-export const logout = async(req, res) => {
+export const logout = async (req, res) => {
     try {
-        res.cookie('token', '', {maxAge: -1})
-        .status(200).json({
+        res.cookie('token', '', { maxAge: -1 }).status(200).json({
             message: 'User loggedOut successfully',
-            success: true
+            success: true,
         })
-    }
-    catch (error) {
+    } catch (error) {
         res.status(500).json({
             error: error.message,
-            success: false
+            success: false,
         })
     }
 }
 
 // export const requestOTPForPhone = async(req,res)=>{
 //     try {
-        
+
 //         const number = req.body.phone;
 //         console.log(number);
 
@@ -140,7 +140,6 @@ export const logout = async(req, res) => {
 
 //         const otp = await  Otp.create({ number: number, otp: OTP });
 
-
 //         var req = unirest("GET", "https://www.fast2sms.com/dev/bulkV2");
 
 //         req.query({
@@ -151,7 +150,7 @@ export const logout = async(req, res) => {
 //             "route": "p",
 //             "numbers": `${number}`,
 //         });
-        
+
 //         req.headers({
 //             "cache-control": "no-cache"
 //         });
@@ -176,7 +175,7 @@ export const logout = async(req, res) => {
 
 // export const verifyOTP = async(req, res) => {
 //     try {
-        
+
 //         const otpHolder = await Otp.find({
 //             number: req.body.phone
 //         });
@@ -189,23 +188,21 @@ export const logout = async(req, res) => {
 //             })
 //         }
 
-
 //         const rightOtpFind = otpHolder[otpHolder.length - 1];
 
-        
 //         const validUser = await bcrypt.compare(req.body.otp, rightOtpFind.otp);
 
 //         if (validUser) {
 
 //             console.log(req.user);
-            
+
 //             req.user.phone = req.body.phone;
 //             await req.user.save();
-    
+
 //             const OtpDelete = await Otp.deleteMany({
 //                 number: rightOtpFind.number
 //             });
-    
+
 //             return res.status(200).json({
 //                 message: 'Phone number verified successfully',
 //                 success: true
@@ -226,211 +223,209 @@ export const logout = async(req, res) => {
 //     }
 // }
 
-export const updatePassword = async(req, res) => {
+export const updatePassword = async (req, res) => {
     try {
-        if(!req.body.oldPassword || !req.body.newPassword){
+        if (!req.body.oldPassword || !req.body.newPassword) {
             return res.status(400).json({
                 error: 'Please fill all the fields',
-                success: false
+                success: false,
             })
         }
 
-        const user = await User.findById(req.user._id).select('+password');
+        const user = await User.findById(req.user._id).select('+password')
 
-        const isMatch = await user.comparePassword(req.body.oldPassword);
+        const isMatch = await user.comparePassword(req.body.oldPassword)
 
-        if(!isMatch){
+        if (!isMatch) {
             return res.status(400).json({
                 error: 'Invalid password',
-                success: false
+                success: false,
             })
         }
 
-        user.password = req.body.newPassword;
-        await user.save();
+        user.password = req.body.newPassword
+        await user.save()
 
         res.status(200).json({
             message: 'Password updated successfully',
-            success: true
+            success: true,
         })
-    }
-    catch (error) {
+    } catch (error) {
         res.status(500).json({
             error: error.message,
-            success: false
+            success: false,
         })
     }
 }
 
-export const updateAddress = async(req, res) => {
+export const updateAddress = async (req, res) => {
     try {
-        const user = await User.findById(req.user._id);
+        const user = await User.findById(req.user._id)
 
-        if(!req.body.address){
+        if (!req.body.address) {
             return res.status(400).json({
                 error: 'Please fill all the fields',
-                success: false
+                success: false,
             })
         }
-        user.address = req.body.address;
+        user.address = req.body.address
 
-        await user.save();
+        await user.save()
 
         res.status(200).json({
             message: 'Address updated successfully',
-            success: true
+            success: true,
         })
-    }
-    catch (error) {
+    } catch (error) {
         res.status(500).json({
             error: error.message,
-            success: false
+            success: false,
         })
     }
 }
 
-export const forgotPassword = async(req, res) => {
+export const forgotPassword = async (req, res) => {
     try {
-        if(!req.body.email){
+        if (!req.body.email) {
             return res.status(400).json({
                 error: 'Please fill all the fields',
-                success: false
+                success: false,
             })
         }
 
-        const user = await User.findOne({email: req.body.email});
-        if(!user){
+        const user = await User.findOne({ email: req.body.email })
+        if (!user) {
             return res.status(400).json({
                 error: 'User with this email does not exist',
-                success: false
+                success: false,
             })
         }
 
-        const resetPasswordToken = user.getResetPasswordToken();
-        await user.save();
+        const resetPasswordToken = user.getResetPasswordToken()
+        await user.save()
 
-        const resetUrl = `${req.protocol}://${req.get("host")}/password/reset/${resetPasswordToken}`;
+        const resetUrl = `${req.protocol}://${req.get('host')}/password/reset/${resetPasswordToken}`
 
-        const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a click on given link: \n\n ${resetUrl}`;
-
+        const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a click on given link: \n\n ${resetUrl}`
 
         try {
             await sendEmail({
                 email: user.email,
-                subject: "Password reset token",
-                message
-            });
+                subject: 'Password reset token',
+                message,
+            })
 
             res.status(200).json({
                 message: `Email sent to ${user.email}`,
-                success: true
+                success: true,
             })
-        }
-        catch(error){
-
-            user.resetPasswordToken = undefined;
-            user.resetPasswordExpire = undefined;
-            await user.save();
+        } catch (error) {
+            user.resetPasswordToken = undefined
+            user.resetPasswordExpire = undefined
+            await user.save()
 
             res.status(500).json({
                 error: error.message,
-                success: false
+                success: false,
             })
         }
-    }
-    catch (error) {
-        res.status(500).json({
-            error: error.message,
-        })    
-    }
-}
-
-export const resetPassword = async(req,res)=>{
-
-    try {
-
-        const resetPasswordToken = crypto.createHash("sha256").update(req.params.token).digest("hex");
-
-        const user = await User.findOne({
-            resetPasswordToken,
-            resetPasswordExpire: {$gt: Date.now()},
-        })
-
-        if(!user){
-            return res.status(401).json({
-                error: "Invalid or expired token",
-                success: false
-            })
-        }
-
-        if(req.body.password ===undefined){
-            return res.status(400).json({
-                error: "Password is required",
-                success: false
-            })
-        }
-
-        user.password = req.body.password;
-
-        user.resetPasswordToken = undefined;
-        user.resetPasswordExpire = undefined;
-
-        await user.save();
-
-        res.status(200).json({
-            message: "Password successfully updated",
-            success: true
-        })
-        
     } catch (error) {
         res.status(500).json({
             error: error.message,
-            success: false
         })
     }
-        
 }
 
-export const myProfile = async(req, res) => {
+export const resetPassword = async (req, res) => {
     try {
+        const resetPasswordToken = crypto
+            .createHash('sha256')
+            .update(req.params.token)
+            .digest('hex')
 
-        const user = await User.findById(req.user._id).select('-password');
+        const user = await User.findOne({
+            resetPasswordToken,
+            resetPasswordExpire: { $gt: Date.now() },
+        })
+
+        if (!user) {
+            return res.status(401).json({
+                error: 'Invalid or expired token',
+                success: false,
+            })
+        }
+
+        if (req.body.password === undefined) {
+            return res.status(400).json({
+                error: 'Password is required',
+                success: false,
+            })
+        }
+
+        user.password = req.body.password
+
+        user.resetPasswordToken = undefined
+        user.resetPasswordExpire = undefined
+
+        await user.save()
+
+        res.status(200).json({
+            message: 'Password successfully updated',
+            success: true,
+        })
+    } catch (error) {
+        res.status(500).json({
+            error: error.message,
+            success: false,
+        })
+    }
+}
+
+export const myProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id).select('-password')
 
         res.status(200).json({
             message: 'User profile',
             user,
-            success: true
+            success: true,
         })
-
-    }
-    catch (error) {
-        res.status(500).json({
-            error: error.message,
-            success: false
-        })
-    }
-}
-
-export const deleteProfile = async(req,res)=>{
-    try {
-
-        const email = req.body.email;
-        const user = await User.deleteOne({email});
-        console.log(user);
-
-        res.status(200).json({
-            message:"User Removed Successfully",
-            success: true
-        })
-        
     } catch (error) {
         res.status(500).json({
             error: error.message,
-            success: false
+            success: false,
         })
     }
 }
 
-const userController = {deleteProfile,forgotPassword,login,logout,myProfile,register,resetPassword,updateAddress,updatePassword}
+export const deleteProfile = async (req, res) => {
+    try {
+        const email = req.body.email
+        const user = await User.deleteOne({ email })
+        console.log(user)
+
+        res.status(200).json({
+            message: 'User Removed Successfully',
+            success: true,
+        })
+    } catch (error) {
+        res.status(500).json({
+            error: error.message,
+            success: false,
+        })
+    }
+}
+
+const userController = {
+    deleteProfile,
+    forgotPassword,
+    login,
+    logout,
+    myProfile,
+    register,
+    resetPassword,
+    updateAddress,
+    updatePassword,
+}
 
 export default userController

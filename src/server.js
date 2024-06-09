@@ -7,11 +7,11 @@ import exportSwaggerEndpoints from './endpoints.js'
 
 // const fas = require('./models/Category.js');
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 8000
 
 export const server = () => {
     app.listen(PORT, () => {
-        console.log('API documentation: http://localhost:3000/docs')
+        console.log('API documentation: http://localhost:8000/docs')
         console.log(`Server is running on port ${PORT}`)
     })
 
