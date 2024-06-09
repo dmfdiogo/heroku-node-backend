@@ -4,9 +4,9 @@
     "description": "",
     "main": "server.js",
     "scripts": {
-        "start": "node src/server.ts",
+        "start": "node src/server.js",
         "test": "mocha --timeout 10000",
-        "dev": "node --watch src/server.ts",
+        "dev": "node --watch src/server.js",
         "swagger": "node --watch src/swagger.js"
     },
     "type": "module",
